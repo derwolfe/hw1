@@ -28,23 +28,26 @@ Track::Track(const String268 &in_title,
  */
 bool Track::matches(String268 &in_title, String268 &in_artist)
 {
-  /* IMPLEMENT ME */
-
-  return true;
+  //  if ((&in_title).compare_me(&track_title) == 1) && 
+   //  ((&in_track).compare_me(&track_title) == 1) {   
+     return true;
+   // }
+   // else {
+    //    return false;
+   // }
 }
-
 void Track::print_title(std::ostream &os)
 {
-    ;
+    /*Implement me*/
 }
 // overloaded the << operator to print all of the class definitions
 // of Track
 std::ostream& operator<<(std::ostream &os, Track &in_track)
 {
-    os << "  Title: " << in_track.title << endl; 
-    os << "  Artist: " << in_track.artist << endl;
-    os << "  Album: " << in_track.album << endl;
-    os << "  Comment: " << in_track.comment << endl;
+    os << "  Title:     " << in_track.title << endl; 
+    os << "  Artist:    " << in_track.artist << endl;
+    os << "  Album:     " << in_track.album << endl;
+    os << "  Comment:   " << in_track.comment << endl;
     os << endl;
     return os;
 }
@@ -56,7 +59,11 @@ std::ostream& operator<<(std::ostream &os, Track &in_track)
  */
 Playlist::Playlist(const String268 &in_title)
 {
-  /* IMPLEMENT ME */
+    int i;
+
+    for (i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++) {
+       // set_of_entries was used in adt_sample
+
 }
 
 /*
@@ -65,8 +72,11 @@ Playlist::Playlist(const String268 &in_title)
  */
 bool Playlist::add_track(Track *in_track)
 {
-  /* IMPLEMENT ME */
-  return false;
+    if (next_open_track_slot == MAX_TRACKS_IN_PLAYLIST) {  
+        return false;
+    }
+    tracks[next_open_track_slot] = *in_track;
+    next_open_track_slot++;    
 }
 
 /*
