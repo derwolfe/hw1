@@ -106,7 +106,6 @@ void Playlist::print_title(std::ostream &os)
 
 std::ostream& operator<<(std::ostream &os, Playlist &in_playlist)
 {
-  /* IMPLEMENT ME */
   return os;
 }
 
@@ -139,14 +138,16 @@ bool Collection::add_track(Track *in_track)
     next_track_slot++;
     return true;
   }
-  /* IMPLEMENT ME */
+  * IMPLEMENT ME */
   return false;
 }
 
 bool Collection::add_playlist(Playlist *in_playlist)
 {
-  /* IMPLEMENT ME */
-  return false;
+    if ( next_track_slot < MAX_PLAYLISTS_IN_DB ) {
+        playlists[next_track_slot] = in_playlist;
+        next_track_slot++;
+    return false;
 }
 
 /*
