@@ -62,8 +62,8 @@ Playlist::Playlist(const String268 &in_title)
     int i;
 
     for (i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++) {
-       // set_of_entries was used in adt_sample
-
+        ;   // set_of_entries was used in adt_sample
+    }
 }
 
 /*
@@ -75,8 +75,9 @@ bool Playlist::add_track(Track *in_track)
     if (next_open_track_slot == MAX_TRACKS_IN_PLAYLIST) {  
         return false;
     }
-    tracks[next_open_track_slot] = *in_track;
+    *tracks[next_open_track_slot] = *in_track;
     next_open_track_slot++;    
+    return true;
 }
 
 /*
