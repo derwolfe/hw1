@@ -58,11 +58,15 @@ std::ostream& operator<<(std::ostream &os, Track &in_track)
  * This section defines the methods for the Playlist Class
  */
 Playlist::Playlist(const String268 &in_title)
+// this method constructs the playlist and assigns it a title
 {
+    // you need to somehow create the setter for the title
+    // title = in_title seems much to simple
+    title = in_title; 
     int i;
 
     for (i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++) {
-        ;   // set_of_entries was used in adt_sample
+       tracks[i] = (Track *)0 ;   
     }
 }
 
@@ -71,11 +75,16 @@ Playlist::Playlist(const String268 &in_title)
  * if not
  */
 bool Playlist::add_track(Track *in_track)
+// Checks to see if playlist is full, if not it adds in_track to
+// tracks in the currently set next available slot. The 
+// next_open_track_slot is then advanced and true is returned.
+
 {
     if (next_open_track_slot == MAX_TRACKS_IN_PLAYLIST) {  
         return false;
     }
-    *tracks[next_open_track_slot] = *in_track;
+    //3rd git commit - i think i may have confused the pointers
+    tracks[next_open_track_slot] = in_track;
     next_open_track_slot++;    
     return true;
 }
