@@ -38,7 +38,8 @@ bool Track::matches(String268 &in_title, String268 &in_artist)
 }
 void Track::print_title(std::ostream &os)
 {
-    /*Implement me*/
+    cout  << "  Title:   " << title << endl;
+    return;
 }
 // overloaded the << operator to print all of the class definitions
 // of Track
