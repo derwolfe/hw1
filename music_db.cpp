@@ -28,13 +28,13 @@ Track::Track(const String268 &in_title,
  */
 bool Track::matches(String268 &in_title, String268 &in_artist)
 {
-  //  if ((&in_title).compare_me(&track_title) == 1) && 
-   //  ((&in_track).compare_me(&track_title) == 1) {   
-     return true;
-   // }
-   // else {
-    //    return false;
-   // }
+    if (( title.compare_me(in_title) == 0 ) && 
+        ( artist.compare_me(in_artist) == 0)) {
+        return true; 
+    }
+    else {
+        return false;
+    }
 }
 void Track::print_title(std::ostream &os)
 {
@@ -59,14 +59,14 @@ std::ostream& operator<<(std::ostream &os, Track &in_track)
  */
 Playlist::Playlist(const String268 &in_title)
 // this method constructs the playlist and assigns it a title
+// assign the title and initialize the playlist with tracks
 {
-    // you need to somehow create the setter for the title
-    // title = in_title seems much to simple
-    title = in_title; 
+    title.assign(in_title); 
+    
     int i;
 
-    for (i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++) {
-       tracks[i] = (Track *)0 ;   
+    for ( i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++ ) {
+       tracks[i] = (Track *)0;   
     }
 }
 
@@ -80,7 +80,7 @@ bool Playlist::add_track(Track *in_track)
 // next_open_track_slot is then advanced and true is returned.
 
 {
-    if (next_open_track_slot == MAX_TRACKS_IN_PLAYLIST) {  
+    if ( next_open_track_slot == MAX_TRACKS_IN_PLAYLIST ) {  
         return false;
     }
     //3rd git commit - i think i may have confused the pointers
@@ -138,7 +138,7 @@ bool Collection::add_track(Track *in_track)
     next_track_slot++;
     return true;
   }
-  * IMPLEMENT ME */
+  /* IMPLEMENT ME */
   return false;
 }
 
@@ -147,6 +147,7 @@ bool Collection::add_playlist(Playlist *in_playlist)
     if ( next_track_slot < MAX_PLAYLISTS_IN_DB ) {
         playlists[next_track_slot] = in_playlist;
         next_track_slot++;
+    }
     return false;
 }
 
