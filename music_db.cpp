@@ -38,7 +38,7 @@ bool Track::matches(String268 &in_title, String268 &in_artist)
 }
 void Track::print_title(std::ostream &os)
 {
-    cout  << "  Title:   " << title << endl;
+    cout << "Title:     "<< os << endl;
     return;
 }
 // overloaded the << operator to print all of the class definitions
@@ -64,11 +64,11 @@ Playlist::Playlist(const String268 &in_title)
 {
     title.assign(in_title); 
     
-    int i;
+//    int i;
 
-    for ( i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++ ) {
-       tracks[i] = (Track *)0;   
-    }
+//    for ( i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++ ) {
+//       tracks[i] = (Track *)0;   
+//    }
 }
 
 /*
@@ -84,7 +84,6 @@ bool Playlist::add_track(Track *in_track)
     if ( next_open_track_slot == MAX_TRACKS_IN_PLAYLIST ) {  
         return false;
     }
-    //3rd git commit - i think i may have confused the pointers
     tracks[next_open_track_slot] = in_track;
     next_open_track_slot++;    
     return true;
@@ -96,8 +95,12 @@ bool Playlist::add_track(Track *in_track)
  */
 bool Playlist::matches(String268 &in_title)
 {
-  /* IMPLEMENT ME */
-  return true;
+    if ((playlist.compare_me(in_title)) == 0 ) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 void Playlist::print_title(std::ostream &os)
