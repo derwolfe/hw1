@@ -34,7 +34,7 @@ bool Track::matches(String268 &in_title, String268 &in_artist)
     }
     else {
         return false;
-    }
+    }    
 }
 void Track::print_title(std::ostream &os)
 {
@@ -61,14 +61,13 @@ std::ostream& operator<<(std::ostream &os, Track &in_track)
 Playlist::Playlist(const String268 &in_title)
 // this method constructs the playlist and assigns it a title
 // assign the title and initialize the playlist with tracks
+// also allocates the playlist space
 {
     title.assign(in_title); 
-    
-//    int i;
-
-//    for ( i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++ ) {
-//       tracks[i] = (Track *)0;   
-//    }
+    int i;
+    for ( i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++ ) {
+       tracks[i] = (Track *)0;   
+    }
 }
 
 /*
@@ -95,6 +94,7 @@ bool Playlist::add_track(Track *in_track)
  */
 bool Playlist::matches(String268 &in_title)
 {
+    if ( title.compare_me(in_title) == 0 ) {    
         return true;
     }
     else {
@@ -164,13 +164,27 @@ bool Collection::add_playlist(Playlist *in_playlist)
  * Find a track that matches on both title and artist strings. Return
  * a pointer to the Track instance if found, a NULL pointer otherwise.
  */
-Track    *Collection::find_track(String268 &track_title, 
+Track *Collection::find_track(String268 &track_title, 
 				 String268 &track_artist)
-//returns a null pointer to type Track
 {
-    if ((track_title == title) && (track_artist == artist)) {
-        return (Track *)0;
+   // for track in Collection
+   //   if track.matches(track_title, track_artist):
+   //       return track
+   //   else:
+   //       return (track *)0
+   //       
+    int i = 0;
+    while (i < MAX_TRACKS_IN_DB) {
+        if (tracks[i].matches( &track_title, &track_artist ) == true ) {
+            return Track;
+            break;
+        }
+        else {
+            return (Track *)0;
+        }
+    }
 }
+
 
 /*
  * Find a playlist by name. Return a pointer to the instance if found,
