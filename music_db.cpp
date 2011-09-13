@@ -138,14 +138,14 @@ Collection::Collection()
  */
 bool Collection::add_track(Track *in_track)
 {
-  if ( next_track_slot < MAX_TRACKS_IN_DB ) {
-    tracks[next_track_slot] = in_track;
-    next_track_slot++;
-    return true;
-  }
-  else if ( next_track_slot >= MAX_TRACKS_IN_DB ) {
-    return false;
-  }
+    if ( next_track_slot < MAX_TRACKS_IN_DB ) {
+        tracks[next_track_slot] = in_track;
+        next_track_slot++;
+        return true;
+    }
+    else if ( next_track_slot >= MAX_TRACKS_IN_DB ) {
+        return false;
+    }
 }
 
 bool Collection::add_playlist(Playlist *in_playlist)
@@ -175,9 +175,8 @@ Track *Collection::find_track(String268 &track_title,
    //       
     int i = 0;
     while (i < MAX_TRACKS_IN_DB) {
-        if (tracks[i].matches( &track_title, &track_artist ) == true ) {
-            return Track;
-            break;
+        if (tracks[i].matches( &track_title, &track_artist )) {
+            return self.tracks[i];
         }
         else {
             return (Track *)0;
