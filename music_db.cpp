@@ -95,7 +95,6 @@ bool Playlist::add_track(Track *in_track)
  */
 bool Playlist::matches(String268 &in_title)
 {
-    if ((playlist.compare_me(in_title)) == 0 ) {
         return true;
     }
     else {
@@ -105,12 +104,14 @@ bool Playlist::matches(String268 &in_title)
 
 void Playlist::print_title(std::ostream &os)
 {
-  /* IMPLEMENT ME */
+    cout << "Playlist Title:    " << os << endl;
 }
 
 std::ostream& operator<<(std::ostream &os, Playlist &in_playlist)
 {
-  return os;
+    // do I need anymore than title?
+    os << "Title:   " << in_playlist.title << endl;
+    return os;
 }
 
 /****************************************************************/
@@ -142,17 +143,21 @@ bool Collection::add_track(Track *in_track)
     next_track_slot++;
     return true;
   }
-  /* IMPLEMENT ME */
-  return false;
+  else if ( next_track_slot >= MAX_TRACKS_IN_DB ) {
+    return false;
+  }
 }
 
 bool Collection::add_playlist(Playlist *in_playlist)
 {
-    if ( next_track_slot < MAX_PLAYLISTS_IN_DB ) {
-        playlists[next_track_slot] = in_playlist;
-        next_track_slot++;
+    if ( next_playlist_slot < MAX_PLAYLISTS_IN_DB ) {
+        playlists[next_playlist_slot] = in_playlist;
+        next_playlist_slot++;
+        return true;
     }
-    return false;
+    else if ( next_playlist_slot >= MAX_PLAYLISTS_IN_DB ) {
+        return false;
+    }
 }
 
 /*
@@ -161,10 +166,10 @@ bool Collection::add_playlist(Playlist *in_playlist)
  */
 Track    *Collection::find_track(String268 &track_title, 
 				 String268 &track_artist)
+//returns a null pointer to type Track
 {
-  /* IMPLEMENT ME */
-
-  return (Track *)0;
+    if ((track_title == title) && (track_artist == artist)) {
+        return (Track *)0;
 }
 
 /*
