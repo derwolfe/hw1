@@ -334,18 +334,19 @@ Track *process_add_track(ifstream &in_port)
      * Read the title, artist, album, and comment lines from the file in
      * that order
      */
-   while ( !in_port.eof() ) {
     // you are using parse_field_line to read in the track information, 
    // meaning the input line must be conserved
    // also this will have to be run on multiple lines, how?
    // the first line received will be for the title, then artist etc.
    // how do you advance the line? 
-        in_port.getline(input_line, MAX_INPUT_LENGTH);     
-        parse_field_line( "title", input_line, title );
-        parse_field_line( "artist", input_line, artist );
-        parse_field_line( "album", input_line, album );
-        parse_field_line( "comment", input_line, comment );
-    }
+    in_port.getline(input_line, MAX_INPUT_LENGTH);     
+    parse_field_line( "title", input_line, title );
+    in_port.getline(input_line, MAX_INPUT_LENGTH); 
+    parse_field_line( "artist", input_line, artist );
+    in_port.getline(input_line, MAX_INPUT_LENGTH); 
+    parse_field_line( "album", input_line, album );
+    in_port.getline(input_line, MAX_INPUT_LENGTH); 
+    parse_field_line( "comment", input_line, comment ); 
     /*
     * Now construct an instance of Track initializing it with the
     * values just read fromtfileds he file
