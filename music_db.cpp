@@ -38,8 +38,7 @@ bool Track::matches(String268 &in_title, String268 &in_artist)
 }
 void Track::print_title(std::ostream &os)
 {
-    cout << "Title:     "<< os << endl;
-    return;
+    os << title << endl;
 }
 // overloaded the << operator to print all of the class definitions
 // of Track
@@ -104,12 +103,11 @@ bool Playlist::matches(String268 &in_title)
 
 void Playlist::print_title(std::ostream &os)
 {
-// implement me
+    os << title << endl;
 }
 
 std::ostream& operator<<(std::ostream &os, Playlist &in_playlist)
 {
-    // do I need anymore than title?
     os << "Title:   " << in_playlist.title << endl;
     return os;
 }
@@ -173,18 +171,19 @@ Track *Collection::find_track(String268 &track_title,
    //   else:
    //       return (track *)0
    //       
+   // return (Track *)0;
+    
+    int i = 0;
+    while (i < MAX_TRACKS_IN_DB) {
+        if (tracks[i]->matches( track_title, track_artist )) {
+            return tracks[i];
+            i++;
+        }
+        else {
+            i++;
+        }
     return (Track *)0;
-   //    int i = 0;
-//    while (i < MAX_TRACKS_IN_DB) {
-//        if (tracks[i].matches( &track_title, &track_artist )) {
-//            return tracks[i];
-//            i++;
-//        }
-//        else {
-//            i++;
-//        }
-//    return (Track *)0;
-//    }
+    }
 }
 
 
@@ -195,14 +194,25 @@ Track *Collection::find_track(String268 &track_title,
 Playlist *Collection::find_playlist(String268 &pl_title)
 {
   //similar to above, just with different vars//
-  //* IMPLEMENT ME */
-  return (Playlist*) 0;
+    int i = 0;
+    while ( i < MAX_PLAYLISTS_IN_DB ) {
+       if ( playlists[i]->matches( pl_title )) {
+            return playlists[i];
+            i++;
+       }
+       else {
+           i++;
+       }
+    }    
+    return (Playlist*) 0;
 }
 
 void Collection::print_track_titles(std::ostream &os)
 {
-  /* IMPLEMENT ME */
-  return;
+    for ( int i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++ ) {
+        tracks[i]->print_title(os);
+        os << endl;
+    }
 }
 
 void Collection::print_playlist_titles(std::ostream &os)
@@ -222,6 +232,8 @@ std::ostream& operator<<(std::ostream &os, Collection &in_collection)
   os << "              *     Tracks      *" << endl;
   os << "              *******************" << endl;
   /* IMPLEMENT ME */
+  // for track in collection
+  //    print track details
   os << endl;
 
   os << "              *******************" << endl;
@@ -334,24 +346,24 @@ Track *process_add_track(ifstream &in_port)
      * Read the title, artist, album, and comment lines from the file in
      * that order
      */
-    // you are using parse_field_line to read in the track information, 
    // meaning the input line must be conserved
-   // also this will have to be run on multiple lines, how?
    // the first line received will be for the title, then artist etc.
-   // how do you advance the line? 
-    in_port.getline(input_line, MAX_INPUT_LENGTH);     
+   // line is automatically advanced
+   // the variables are set, then placed in the new Track object 
+    in_port.getline( input_line, MAX_INPUT_LENGTH );     
     parse_field_line( "title", input_line, title );
-    in_port.getline(input_line, MAX_INPUT_LENGTH); 
+    in_port.getline( input_line, MAX_INPUT_LENGTH ); 
     parse_field_line( "artist", input_line, artist );
-    in_port.getline(input_line, MAX_INPUT_LENGTH); 
+    in_port.getline( input_line, MAX_INPUT_LENGTH ); 
     parse_field_line( "album", input_line, album );
-    in_port.getline(input_line, MAX_INPUT_LENGTH); 
+    in_port.getline( input_line, MAX_INPUT_LENGTH ); 
     parse_field_line( "comment", input_line, comment ); 
     /*
     * Now construct an instance of Track initializing it with the
     * values just read fromtfileds he file
     */
     new_track = new Track( title, artist, album, comment );
+   // cout << "" << *new_track << endl;
     return new_track;
 }
 
@@ -369,8 +381,12 @@ Playlist *process_add_playlist(ifstream &in_port, Collection &collection)
    * Read the title of the playlist and then dynamically allocate an
    * instance of Playlist providing the title just read
    */
-  /* IMPLEMENT ME */
-
+    in_port.getline( input_line, MAX_INPUT_LENGTH );
+    parse_field_line( "title", input_line, pl_title );
+    // check if title is empty, if not instantiate w/ pl_title 
+    if ( !pl_title.compare_me("") ) {
+        new_playlist = new Playlist( pl_title );
+    }
   /*
    * Now read pairs of track titles and artists that are elements of
    * the playlist. Look them up in the tracks defined in the
@@ -381,9 +397,17 @@ Playlist *process_add_playlist(ifstream &in_port, Collection &collection)
    * break command.
    */
   while ( true ) {
-  
-    /* IMPLEMENT ME */
-
+        // parse the input file for the track title and artist
+        in_port.getline( input_line, MAX_INPUT_LENGTH );
+        parse_field_line( "title", input_line, track_title );
+        in_port.getline( input_line, MAX_INPUT_LENGTH );
+        parse_field_line( "artist", input_line, track_artist );
+        
+        // for track in collection
+        //  check to see if track == track in collection, if so return pointer
+         
+        // check to see if the title and artist pair are equal to anything
+    
     if ( input_line[0] == '\0' ) {
       /*
        * Blank line terminates the list of tracks specified for a play
