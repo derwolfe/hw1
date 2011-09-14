@@ -28,7 +28,7 @@ Track::Track(const String268 &in_title,
  */
 bool Track::matches(String268 &in_title, String268 &in_artist)
 {
-    if (( title.compare_me(in_title) == 0 ) && 
+    if ((title.compare_me(in_title) == 0 ) && 
         ( artist.compare_me(in_artist) == 0)) {
         return true; 
     }
@@ -104,7 +104,7 @@ bool Playlist::matches(String268 &in_title)
 
 void Playlist::print_title(std::ostream &os)
 {
-    cout << "Playlist Title:    " << os << endl;
+// implement me
 }
 
 std::ostream& operator<<(std::ostream &os, Playlist &in_playlist)
@@ -173,15 +173,18 @@ Track *Collection::find_track(String268 &track_title,
    //   else:
    //       return (track *)0
    //       
-    int i = 0;
-    while (i < MAX_TRACKS_IN_DB) {
-        if (tracks[i].matches( &track_title, &track_artist )) {
-            return self.tracks[i];
-        }
-        else {
-            return (Track *)0;
-        }
-    }
+    return (Track *)0;
+   //    int i = 0;
+//    while (i < MAX_TRACKS_IN_DB) {
+//        if (tracks[i].matches( &track_title, &track_artist )) {
+//            return tracks[i];
+//            i++;
+//        }
+//        else {
+//            i++;
+//        }
+//    return (Track *)0;
+//    }
 }
 
 
@@ -191,7 +194,8 @@ Track *Collection::find_track(String268 &track_title,
  */
 Playlist *Collection::find_playlist(String268 &pl_title)
 {
-  /* IMPLEMENT ME */
+  //similar to above, just with different vars//
+  //* IMPLEMENT ME */
   return (Playlist*) 0;
 }
 
@@ -318,27 +322,31 @@ void parse_field_line(const char *field_label, char input_line[], String268 &tar
 
 Track *process_add_track(ifstream &in_port)
 {
-  Track *new_track;
-  char   input_line[MAX_INPUT_LENGTH];
+    Track *new_track;
+    char   input_line[MAX_INPUT_LENGTH];
 
-  String268 title;
-  String268 artist;
-  String268 album;
-  String268 comment;
+    String268 title;
+    String268 artist;
+    String268 album;
+    String268 comment;
 
-  /*
-   * Read the title, artist, album, and comment lines from the file in
-   * that order
-   */
-  /* IMPLEMENT ME */
-
-  /*
-   * Now construct an instance of Track initializing it with the
-   * values just read fromtfileds he file
-   */
-  /* IMPLEMENT ME */
-
-  return new_track;
+     /*
+     * Read the title, artist, album, and comment lines from the file in
+     * that order
+     */
+    in_port.get(input_line, MAX_INPUT_LENGTH);
+    
+    parse_field_line( "title", input_line, title );
+//    parse_field_line( "artist", input_line, artist );
+//    parse_field_line( "album", input_line, album );
+//    parse_field_line( "comment", input_line, comment );
+     
+    /*
+    * Now construct an instance of Track initializing it with the
+    * values just read fromtfileds he file
+    */
+    new_track = new Track( title, artist, album, comment );
+    return new_track;
 }
 
 Playlist *process_add_playlist(ifstream &in_port, Collection &collection)
