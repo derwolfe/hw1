@@ -62,8 +62,7 @@ Playlist::Playlist(const String268 &in_title)
 // also allocates the playlist space
 {
     title.assign(in_title); 
-    int i;
-    for ( i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++ ) {
+    for (int i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++ ) {
        tracks[i] = (Track *)0;   
     }
 }
@@ -78,14 +77,14 @@ bool Playlist::add_track(Track *in_track)
 // next_open_track_slot is then advanced and true is returned.
 
 {
-    if ( next_open_track_slot == MAX_TRACKS_IN_PLAYLIST ) {  
+    if ( next_open_track_slot != MAX_TRACKS_IN_PLAYLIST ) {
+        tracks[next_open_track_slot] = in_track;
+        next_open_track_slot++;    
+        return true;
+    } else {
         return false;
     }
-    tracks[next_open_track_slot] = in_track;
-    next_open_track_slot++;    
-    return true;
 }
-
 /*
  * See if the input title matches the title of this playlist. Return
  * true if so, false otherwise.
@@ -161,14 +160,14 @@ bool Collection::add_playlist(Playlist *in_playlist)
 Track *Collection::find_track(String268 &track_title, 
 				 String268 &track_artist)
 {
-   // for track in Collection
-   //   if track.matches(track_title, track_artist):
-   //       return track
-   //   else:
-   //       return (track *)0
-   //       
-   // return (Track *)0;
-    
+   /* for track in Collection
+   *   if track.matches(track_title, track_artist):
+   *       return track
+   *   else:
+   *       return (track *)0
+   *       
+   * return (Track *)0;
+   */ 
     int i = 0;
     while (i < MAX_TRACKS_IN_DB) {
         if (tracks[i]->matches( track_title, track_artist )) {
@@ -395,42 +394,41 @@ Playlist *process_add_playlist(ifstream &in_port, Collection &collection)
    * Terminate the loop when we hit a blank line by executing the
    * break command.
    */
+
     while ( true ) {
-        // parse the input file for the track title and artist
-        in_port.getline( input_line, MAX_INPUT_LENGTH );
-        //parsing is where the seg fault occurs
-        parse_field_line( "title", input_line, track_title );
-        
-        in_port.getline( input_line, MAX_INPUT_LENGTH );
-        parse_field_line( "artist", input_line, track_artist );
- 
         if ( input_line[0] == '\0' ) {
-       /*
+        /*
         * Blank line terminates the list of tracks specified for a play
         * list
         */
             break;
+        }
+        /* parse the input, read track info into track_title and 
+         * track_artist
+         */
+        in_port.getline( input_line, MAX_INPUT_LENGTH );
+        parse_field_line( "title", input_line, track_title ); 
+        in_port.getline( input_line, MAX_INPUT_LENGTH );
+        parse_field_line( "artist", input_line, track_artist );
+
+       /*
+        * Find the track in the collection by title and artist pair read
+        * in as part of the playlist definition using the find_track
+        * method in the Collection Class.
+         */
+        track_ptr = collection.find_track( track_title, track_artist );
+        /*
+        * Add the pointer to the track instance to the playlist
+        */  
+        new_playlist->add_track(track_ptr); 
+        /* clear title and artist variables */
+        track_title = "";
+        track_artist = "";     
+    
     }
-
-    /* IMPLEMENT ME */
-
-    /*
-     * Find the track in the collection by title and artist pair read
-     * in as part of the playlist definition using the find_track
-     * method in the Collection Class.
+     /*
+     * return the constructed playlist
      */
-    /* IMPLEMENT ME */
-
-    /*
-     * Add the pointer to the track instance to the playlist
-     */
-    /* IMPLEMENT ME */
-
-    }
-
-    /*
-    * return the constructed playlist
-    */
     return new_playlist;
 }
 
@@ -539,8 +537,12 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
        * Get the title and artist field values and then try to find
        * the track in the collection.
        */
-
-      /* IMPLEMENT ME */
+        //newly added 
+      in_port.getline( input_line, MAX_INPUT_LENGTH);  
+      parse_field_line( "title", input_line, title_value );
+      in_port.getline( input_line, MAX_INPUT_LENGTH );
+      parse_field_line( "artist", input_line, artist_value );
+      
 
       track_p = in_collection.find_track(title_value, artist_value);
       if ( track_p == (Track *)0 ) {
