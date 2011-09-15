@@ -31,8 +31,7 @@ bool Track::matches(String268 &in_title, String268 &in_artist)
     if ((title.compare_me(in_title) == 0 ) && 
         ( artist.compare_me(in_artist) == 0)) {
         return true; 
-    }
-    else {
+    } else {
         return false;
     }    
 }
@@ -95,8 +94,7 @@ bool Playlist::matches(String268 &in_title)
 {
     if ( title.compare_me(in_title) == 0 ) {    
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
@@ -120,15 +118,15 @@ std::ostream& operator<<(std::ostream &os, Playlist &in_playlist)
 
 Collection::Collection()
 {
-  for ( int i = 0; i < MAX_TRACKS_IN_DB; i++ ) {
-    tracks[i] = (Track *)0;
-  }
-  next_track_slot = 0;
+    for ( int i = 0; i < MAX_TRACKS_IN_DB; i++ ) {
+      tracks[i] = (Track *)0;
+    }
+    next_track_slot = 0;
 
-  for ( int i = 0; i < MAX_PLAYLISTS_IN_DB; i++ ) {
-    playlists[i] = (Playlist *)0;
-  }
-  next_playlist_slot = 0;
+    for ( int i = 0; i < MAX_PLAYLISTS_IN_DB; i++ ) {
+      playlists[i] = (Playlist *)0;
+    }
+    next_playlist_slot = 0;
 }
 
 /*
@@ -140,8 +138,7 @@ bool Collection::add_track(Track *in_track)
         tracks[next_track_slot] = in_track;
         next_track_slot++;
         return true;
-    }
-    else if ( next_track_slot >= MAX_TRACKS_IN_DB ) {
+    } else if ( next_track_slot >= MAX_TRACKS_IN_DB ) {
         return false;
     }
 }
@@ -152,8 +149,7 @@ bool Collection::add_playlist(Playlist *in_playlist)
         playlists[next_playlist_slot] = in_playlist;
         next_playlist_slot++;
         return true;
-    }
-    else if ( next_playlist_slot >= MAX_PLAYLISTS_IN_DB ) {
+    } else if ( next_playlist_slot >= MAX_PLAYLISTS_IN_DB ) {
         return false;
     }
 }
@@ -178,8 +174,7 @@ Track *Collection::find_track(String268 &track_title,
         if (tracks[i]->matches( track_title, track_artist )) {
             return tracks[i];
             i++;
-        }
-        else {
+        } else {
             i++;
         }
     return (Track *)0;
@@ -199,8 +194,7 @@ Playlist *Collection::find_playlist(String268 &pl_title)
        if ( playlists[i]->matches( pl_title )) {
             return playlists[i];
             i++;
-       }
-       else {
+       } else {
            i++;
        }
     }    
@@ -208,6 +202,9 @@ Playlist *Collection::find_playlist(String268 &pl_title)
 }
 
 void Collection::print_track_titles(std::ostream &os)
+/* Cycle through the set of tracks, provide output stream 
+ * the title
+ */ 
 {
     for ( int i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++ ) {
         tracks[i]->print_title(os);
@@ -216,9 +213,14 @@ void Collection::print_track_titles(std::ostream &os)
 }
 
 void Collection::print_playlist_titles(std::ostream &os)
+/* Cycle through the set of playlists, provide output 
+ * stream with the title
+ */ 
 {
-  /* IMPLEMENT ME */
-  return;
+    for ( int i = 0; i < MAX_PLAYLISTS_IN_DB; i++ ) {
+        playlists[i]->print_title(os);
+        os << endl;
+    }
 }
 
 std::ostream& operator<<(std::ostream &os, Collection &in_collection)
@@ -232,8 +234,6 @@ std::ostream& operator<<(std::ostream &os, Collection &in_collection)
   os << "              *     Tracks      *" << endl;
   os << "              *******************" << endl;
   /* IMPLEMENT ME */
-  // for track in collection
-  //    print track details
   os << endl;
 
   os << "              *******************" << endl;
@@ -363,19 +363,18 @@ Track *process_add_track(ifstream &in_port)
     * values just read fromtfileds he file
     */
     new_track = new Track( title, artist, album, comment );
-   // cout << "" << *new_track << endl;
     return new_track;
 }
 
 Playlist *process_add_playlist(ifstream &in_port, Collection &collection)
 {
-  Playlist *new_playlist;
-  Track    *track_ptr;
-  char      input_line[MAX_INPUT_LENGTH];
+    Playlist *new_playlist;
+    Track    *track_ptr;
+    char      input_line[MAX_INPUT_LENGTH];
 
-  String268 pl_title;
-  String268 track_title;
-  String268 track_artist;
+    String268 pl_title;
+    String268 track_title;
+    String268 track_artist;
 
   /*
    * Read the title of the playlist and then dynamically allocate an
@@ -396,24 +395,21 @@ Playlist *process_add_playlist(ifstream &in_port, Collection &collection)
    * Terminate the loop when we hit a blank line by executing the
    * break command.
    */
-  while ( true ) {
+    while ( true ) {
         // parse the input file for the track title and artist
         in_port.getline( input_line, MAX_INPUT_LENGTH );
+        //parsing is where the seg fault occurs
         parse_field_line( "title", input_line, track_title );
+        
         in_port.getline( input_line, MAX_INPUT_LENGTH );
         parse_field_line( "artist", input_line, track_artist );
-        
-        // for track in collection
-        //  check to see if track == track in collection, if so return pointer
-         
-        // check to see if the title and artist pair are equal to anything
-    
-    if ( input_line[0] == '\0' ) {
-      /*
-       * Blank line terminates the list of tracks specified for a play
-       * list
-       */
-      break;
+ 
+        if ( input_line[0] == '\0' ) {
+       /*
+        * Blank line terminates the list of tracks specified for a play
+        * list
+        */
+            break;
     }
 
     /* IMPLEMENT ME */
@@ -430,12 +426,12 @@ Playlist *process_add_playlist(ifstream &in_port, Collection &collection)
      */
     /* IMPLEMENT ME */
 
-  }
+    }
 
-  /*
-   * return the constructed playlist
-   */
-  return new_playlist;
+    /*
+    * return the constructed playlist
+    */
+    return new_playlist;
 }
 
 /*
