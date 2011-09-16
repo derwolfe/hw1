@@ -593,7 +593,7 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
       out_port << "*************************" << endl;
       out_port << "* List All Track Titles *" << endl;
       out_port << "**************************" << endl;
-       in_playlist.print_track_titles(outport);
+       playlist_p->print_track_titles(outport);
       out_port << endl;
       break;
 
@@ -601,7 +601,7 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
       out_port << "****************************" << endl;
       out_port << "* List All Playlist Titles *" << endl;
       out_port << "****************************" << endl;
-        in_playlist.print_playlist_titles(outport);
+        playlist_p->print_playlist_titles(outport);
       out_port << endl;
       break;
 
