@@ -156,6 +156,9 @@ bool Collection::add_track(Track *in_track)
 
 bool Collection::add_playlist(Playlist *in_playlist)
 {
+    if (in_playlist == NULL ) {
+        return false;
+    }
     if ( next_playlist_slot < MAX_PLAYLISTS_IN_DB ) {
         playlists[next_playlist_slot] = in_playlist;
         next_playlist_slot++;
@@ -244,14 +247,14 @@ std::ostream& operator<<(std::ostream &os, Collection &in_collection)
   os << "              *******************" << endl;
   os << "              *     Tracks      *" << endl;
   os << "              *******************" << endl;
-  /* IMPLEMENT ME */
+    in_collection.print_track_titles(os); 
   os << endl;
 
   os << "              *******************" << endl;
   os << "              *    Playlists    *" << endl;
   os << "              *******************" << endl;
-  /* IMPLEMENT ME */
-
+    in_collection.print_playlist_titles(os);
+    os << endl;
   return os;
 }
 
@@ -357,7 +360,6 @@ Track *process_add_track(ifstream &in_port)
      * Read the title, artist, album, and comment lines from the file in
      * that order
      */
-   // meaning the input line must be conserved
    // the first line received will be for the title, then artist etc.
    // line is automatically advanced
    // the variables are set, then placed in the new Track object 
@@ -434,10 +436,6 @@ Playlist *process_add_playlist(ifstream &in_port, Collection &collection)
         * Add the pointer to the track instance to the playlist
         */  
         new_playlist->add_track(track_ptr); 
-        /* clear title and artist variables */
-        track_title = "";
-        track_artist = "";     
-    
     }
      /*
      * return the constructed playlist
@@ -550,7 +548,6 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
        * Get the title and artist field values and then try to find
        * the track in the collection.
        */
-        //newly added 
       in_port.getline( input_line, MAX_INPUT_LENGTH);  
       parse_field_line( "title", input_line, title_value );
       in_port.getline( input_line, MAX_INPUT_LENGTH );
@@ -570,7 +567,10 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
       out_port << "******************" << endl;
       out_port << *track_p << endl;
       break;
-
+    /* currently implemented using outport as the output stream
+     * this may be incorrect as several functions are sending derefenced 
+     * objects (i.e. their values) to the output stream.
+     */
     case CMD_PRINT_PLAYLIST:
       /*
        * Process the title field line then look for aplaylist with
@@ -593,9 +593,7 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
       out_port << "*************************" << endl;
       out_port << "* List All Track Titles *" << endl;
       out_port << "**************************" << endl;
-      
-      /* IMPLEMENT ME */
-
+       in_playlist.print_track_titles(outport);
       out_port << endl;
       break;
 
@@ -603,19 +601,15 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
       out_port << "****************************" << endl;
       out_port << "* List All Playlist Titles *" << endl;
       out_port << "****************************" << endl;
-      
-      /* IMPLEMENT ME */
-
+        in_playlist.print_playlist_titles(outport);
       out_port << endl;
       break;
 
     case CMD_PRINT_COLLECTION:
       out_port << "**************************" << endl;
       out_port << "* Print Whole Collection *" << endl;
-      out_port << "**************************" << endl;
-      
-      /* IMPLEMENT ME */
-
+      out_port << "**************************" << endl;      
+        in_collection.print_track_titles(outport);
       out_port << endl;
       break;
 
