@@ -65,6 +65,7 @@ Playlist::Playlist(const String268 &in_title)
     for (int i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++ ) {
        tracks[i] = (Track *)0;   
     }
+    next_open_track_slot = 0;
 }
 
 /*
@@ -77,13 +78,19 @@ bool Playlist::add_track(Track *in_track)
 // next_open_track_slot is then advanced and true is returned.
 
 {
-    if ( next_open_track_slot != MAX_TRACKS_IN_PLAYLIST ) {
+
+    if (in_track == NULL)
+        return false;
+
+    if ( next_open_track_slot < MAX_TRACKS_IN_PLAYLIST ) {
+
         tracks[next_open_track_slot] = in_track;
         next_open_track_slot++;    
         return true;
-    } else {
-        return false;
-    }
+    } 
+
+    return false;
+
 }
 /*
  * See if the input title matches the title of this playlist. Return
@@ -133,13 +140,18 @@ Collection::Collection()
  */
 bool Collection::add_track(Track *in_track)
 {
+    if (in_track == NULL ) {
+        return false;
+    }
+
     if ( next_track_slot < MAX_TRACKS_IN_DB ) {
         tracks[next_track_slot] = in_track;
         next_track_slot++;
         return true;
-    } else if ( next_track_slot >= MAX_TRACKS_IN_DB ) {
-        return false;
-    }
+    } 
+
+    return false;
+
 }
 
 bool Collection::add_playlist(Playlist *in_playlist)
@@ -148,9 +160,9 @@ bool Collection::add_playlist(Playlist *in_playlist)
         playlists[next_playlist_slot] = in_playlist;
         next_playlist_slot++;
         return true;
-    } else if ( next_playlist_slot >= MAX_PLAYLISTS_IN_DB ) {
-        return false;
-    }
+    } 
+    return false;
+
 }
 
 /*
@@ -396,17 +408,18 @@ Playlist *process_add_playlist(ifstream &in_port, Collection &collection)
    */
 
     while ( true ) {
-        if ( input_line[0] == '\0' ) {
+
+        in_port.getline( input_line, MAX_INPUT_LENGTH );
+        if (!strlen(input_line)) {
         /*
         * Blank line terminates the list of tracks specified for a play
         * list
         */
             break;
         }
-        /* parse the input, read track info into track_title and 
+        /* Implied ELSE: parse the input, read track info into track_title and 
          * track_artist
          */
-        in_port.getline( input_line, MAX_INPUT_LENGTH );
         parse_field_line( "title", input_line, track_title ); 
         in_port.getline( input_line, MAX_INPUT_LENGTH );
         parse_field_line( "artist", input_line, track_artist );
