@@ -62,9 +62,9 @@ Playlist::Playlist(const String268 &in_title)
 // also allocates the playlist space
 {
     title.assign(in_title); 
-    for (int i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++ ) {
-       tracks[i] = (Track *)0;   
-    }
+//    for (int i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++ ) {
+//       tracks[i] = (Track *)0;   
+//    }
     next_open_track_slot = 0;
 }
 
@@ -83,11 +83,10 @@ bool Playlist::add_track(Track *in_track)
         return false;
 
     if ( next_open_track_slot < MAX_TRACKS_IN_PLAYLIST ) {
-
         tracks[next_open_track_slot] = in_track;
         next_open_track_slot++;    
         return true;
-    } 
+    }  
 
     return false;
 
@@ -156,7 +155,7 @@ bool Collection::add_track(Track *in_track)
 
 bool Collection::add_playlist(Playlist *in_playlist)
 {
-    if (in_playlist == NULL ) {
+    if ( in_playlist == NULL ) {
         return false;
     }
     if ( next_playlist_slot < MAX_PLAYLISTS_IN_DB ) {
@@ -184,7 +183,7 @@ Track *Collection::find_track(String268 &track_title,
    * return (Track *)0;
    */ 
     int i = 0;
-    while (i < MAX_TRACKS_IN_DB) {
+    while ( i < MAX_TRACKS_IN_DB ) {
         if (tracks[i]->matches( track_title, track_artist )) {
             return tracks[i];
             i++;
@@ -209,7 +208,7 @@ Playlist *Collection::find_playlist(String268 &pl_title)
             return playlists[i];
             i++;
        } else {
-           i++;
+            i++;
        }
     }    
     return (Playlist*) 0;
@@ -220,9 +219,8 @@ void Collection::print_track_titles(std::ostream &os)
  * the title
  */ 
 {
-    for ( int i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++ ) {
+    for ( int i = 0; i < MAX_TRACKS_IN_DB; i++ ) {
         tracks[i]->print_title(os);
-        os << endl;
     }
 }
 
@@ -233,7 +231,6 @@ void Collection::print_playlist_titles(std::ostream &os)
 {
     for ( int i = 0; i < MAX_PLAYLISTS_IN_DB; i++ ) {
         playlists[i]->print_title(os);
-        os << endl;
     }
 }
 
@@ -254,7 +251,6 @@ std::ostream& operator<<(std::ostream &os, Collection &in_collection)
   os << "              *    Playlists    *" << endl;
   os << "              *******************" << endl;
     in_collection.print_playlist_titles(os);
-    os << endl;
   return os;
 }
 
@@ -360,9 +356,10 @@ Track *process_add_track(ifstream &in_port)
      * Read the title, artist, album, and comment lines from the file in
      * that order
      */
-   // the first line received will be for the title, then artist etc.
-   // line is automatically advanced
-   // the variables are set, then placed in the new Track object 
+    /* the first line received will be for the title, then artist etc.
+    * line is automatically advanced
+    * the variables are set, then placed in the new Track object 
+    */
     in_port.getline( input_line, MAX_INPUT_LENGTH );     
     parse_field_line( "title", input_line, title );
     in_port.getline( input_line, MAX_INPUT_LENGTH ); 
@@ -553,13 +550,13 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
       in_port.getline( input_line, MAX_INPUT_LENGTH );
       parse_field_line( "artist", input_line, artist_value );
       
+      track_p = in_collection.find_track( title_value, artist_value );
 
-      track_p = in_collection.find_track(title_value, artist_value);
       if ( track_p == (Track *)0 ) {
-	cout << "Error: failure finding a track" << endl;
-	cout <<  "Title:  " << title_value  << endl;
-	cout <<  "Artist: " << artist_value << endl;
-	exit(1);
+	    cout << "Error: failure finding a track" << endl;
+	    cout <<  "Title:  " << title_value  << endl;
+	    cout <<  "Artist: " << artist_value << endl;
+    	exit(1);
       }
 
       out_port << "******************" << endl;
@@ -576,11 +573,15 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
        * Process the title field line then look for aplaylist with
        * that title.
        */
-      /* IMPLEMENT ME */
+     /* if playlist matches 
+      *     return pointer to paylist
+      *     else return null playlist point
+      */
+      playlist_p = in_collection.find_playlist( title_value );
       if ( playlist_p == (Playlist *)0 ) {
-	cout << "Error: failure finding a playlist" << endl;
-	cout <<  "Title:  " << title_value  << endl;
-	exit(1);
+	    cout << "Error: failure finding a playlist" << endl;
+    	cout <<  "Title:  " << title_value  << endl;
+	    exit(1);
       }
 
       out_port << "*********************" << endl;
@@ -593,7 +594,8 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
       out_port << "*************************" << endl;
       out_port << "* List All Track Titles *" << endl;
       out_port << "**************************" << endl;
-       playlist_p->print_track_titles(outport);
+      //out_port << in_collection.tracks << endl;
+        in_collection.print_track_titles( out_port );
       out_port << endl;
       break;
 
@@ -601,7 +603,7 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
       out_port << "****************************" << endl;
       out_port << "* List All Playlist Titles *" << endl;
       out_port << "****************************" << endl;
-        playlist_p->print_playlist_titles(outport);
+        in_collection.print_playlist_titles( out_port );
       out_port << endl;
       break;
 
@@ -609,7 +611,7 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
       out_port << "**************************" << endl;
       out_port << "* Print Whole Collection *" << endl;
       out_port << "**************************" << endl;      
-        in_collection.print_track_titles(outport);
+      out_port << in_collection << endl;
       out_port << endl;
       break;
 
