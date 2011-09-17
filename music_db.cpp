@@ -28,11 +28,10 @@ Track::Track(const String268 &in_title,
  */
 bool Track::matches(String268 &in_title, String268 &in_artist)
 {
-    if ((title.compare_me(in_title) == 0 ) && 
-        ( artist.compare_me(in_artist) == 0)) {
+    if (( title.compare_me( in_title ) == 0 ) && 
+        ( artist.compare_me( in_artist ) == 0 )) {
         return true; 
-    } else {
-        return false;
+    return false;
     }    
 }
 void Track::print_title(std::ostream &os)
@@ -99,9 +98,8 @@ bool Playlist::matches(String268 &in_title)
 {
     if ( title.compare_me(in_title) == 0 ) {    
         return true;
-    } else {
-        return false;
     }
+    return false;
 }
 
 void Playlist::print_title(std::ostream &os)
@@ -139,7 +137,7 @@ Collection::Collection()
  */
 bool Collection::add_track(Track *in_track)
 {
-    if (in_track == NULL ) {
+    if ( in_track == NULL ) {
         return false;
     }
 
@@ -186,9 +184,7 @@ Track *Collection::find_track(String268 &track_title,
     while ( i < MAX_TRACKS_IN_DB ) {
         if (tracks[i]->matches( track_title, track_artist )) {
             return tracks[i];
-            i++;
-        } else {
-            i++;
+        i++;
         }
     return (Track *)0;
     }
@@ -206,11 +202,9 @@ Playlist *Collection::find_playlist(String268 &pl_title)
     while ( i < MAX_PLAYLISTS_IN_DB ) {
        if ( playlists[i]->matches( pl_title )) {
             return playlists[i];
-            i++;
-       } else {
-            i++;
        }
-    }    
+       i++;
+    }
     return (Playlist*) 0;
 }
 
@@ -551,7 +545,7 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
       parse_field_line( "artist", input_line, artist_value );
       
       track_p = in_collection.find_track( title_value, artist_value );
-
+        out_port << track_p << endl;
       if ( track_p == (Track *)0 ) {
 	    cout << "Error: failure finding a track" << endl;
 	    cout <<  "Title:  " << title_value  << endl;
