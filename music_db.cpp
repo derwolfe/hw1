@@ -96,7 +96,7 @@ bool Playlist::add_track(Track *in_track)
  */
 bool Playlist::matches(String268 &in_title)
 {
-    if ( title.compare_me(in_title) == 0 ) {    
+    if ( title.compare_me( in_title ) == 0 ) {    
         return true;
     }
     return false;
@@ -168,26 +168,20 @@ bool Collection::add_playlist(Playlist *in_playlist)
 /*
  * Find a track that matches on both title and artist strings. Return
  * a pointer to the Track instance if found, a NULL pointer otherwise.
+ *
+ * The while loop is not executing, only one search is being performed. 
+ * and then a null string is spat out.
  */
+
 Track *Collection::find_track(String268 &track_title, 
 				 String268 &track_artist)
 {
-   /* for track in Collection
-   *   if track.matches(track_title, track_artist):
-   *       return track
-   *   else:
-   *       return (track *)0
-   *       
-   * return (Track *)0;
-   */ 
-    int i = 0;
-    while ( i < MAX_TRACKS_IN_DB ) {
-        if (tracks[i]->matches( track_title, track_artist )) {
+    for ( int i = 0; i < MAX_TRACKS_IN_DB; i++ ) {
+        if ( tracks[i]->matches( track_title, track_artist )) {
             return tracks[i];
-        i++;
         }
-    return (Track *)0;
     }
+    return (Track *)0;
 }
 
 
@@ -198,12 +192,10 @@ Track *Collection::find_track(String268 &track_title,
 Playlist *Collection::find_playlist(String268 &pl_title)
 {
   //similar to above, just with different vars//
-    int i = 0;
-    while ( i < MAX_PLAYLISTS_IN_DB ) {
-       if ( playlists[i]->matches( pl_title )) {
+    for ( int i = 0; i < MAX_PLAYLISTS_IN_DB; i++ ) {
+        if ( playlists[i]->matches( pl_title )) {
             return playlists[i];
-       }
-       i++;
+        }
     }
     return (Playlist*) 0;
 }
@@ -387,9 +379,9 @@ Playlist *process_add_playlist(ifstream &in_port, Collection &collection)
     in_port.getline( input_line, MAX_INPUT_LENGTH );
     parse_field_line( "title", input_line, pl_title );
     // check if title is empty, if not instantiate w/ pl_title 
-    if ( !pl_title.compare_me("") ) {
-        new_playlist = new Playlist( pl_title );
-    }
+    // if ( !pl_title.compare_me("") ) {
+    new_playlist = new Playlist( pl_title );
+    // }
   /*
    * Now read pairs of track titles and artists that are elements of
    * the playlist. Look them up in the tracks defined in the
