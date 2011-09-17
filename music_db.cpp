@@ -61,9 +61,9 @@ Playlist::Playlist(const String268 &in_title)
 // also allocates the playlist space
 {
     title.assign(in_title); 
-//    for (int i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++ ) {
-//       tracks[i] = (Track *)0;   
-//    }
+    for (int i = 0; i < MAX_TRACKS_IN_PLAYLIST; i++ ) {
+       tracks[i] = (Track *)0;   
+    }
     next_open_track_slot = 0;
 }
 
@@ -570,8 +570,13 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
      /* if playlist matches 
       *     return pointer to paylist
       *     else return null playlist point
+      *     'Had to get the input for the command, parse it
       */
+      
+      in_port.getline( input_line, MAX_INPUT_LENGTH); 
+      parse_field_line ( "pl_title", input_line, title_value );
       playlist_p = in_collection.find_playlist( title_value );
+
       if ( playlist_p == (Playlist *)0 ) {
 	    cout << "Error: failure finding a playlist" << endl;
     	cout <<  "Title:  " << title_value  << endl;
