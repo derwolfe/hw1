@@ -101,12 +101,12 @@ bool Playlist::matches(String268 &in_title)
     }
     return false;
 }
-
+/* send the title object to the output stream */
 void Playlist::print_title(std::ostream &os)
 {
     os << title << endl;
 }
-
+/* overload the << operator to push the title */
 std::ostream& operator<<(std::ostream &os, Playlist &in_playlist)
 {
     os << "Title:   " << in_playlist.title << endl;
@@ -150,7 +150,9 @@ bool Collection::add_track(Track *in_track)
     return false;
 
 }
-
+/* Iterate through the playlists, upping the slot count
+ * each iteration 
+ */
 bool Collection::add_playlist(Playlist *in_playlist)
 {
     if ( in_playlist == NULL ) {
@@ -230,13 +232,13 @@ std::ostream& operator<<(std::ostream &os, Collection &in_collection)
   os << "              *******************" << endl;
   os << "              *     Tracks      *" << endl;
   os << "              *******************" << endl;
-    in_collection.print_track_titles(os); 
+    in_collection.print_track_titles( os ); 
   os << endl;
 
   os << "              *******************" << endl;
   os << "              *    Playlists    *" << endl;
   os << "              *******************" << endl;
-    in_collection.print_playlist_titles(os);
+    in_collection.print_playlist_titles( os );
   return os;
 }
 
@@ -378,10 +380,7 @@ Playlist *process_add_playlist(ifstream &in_port, Collection &collection)
    */
     in_port.getline( input_line, MAX_INPUT_LENGTH );
     parse_field_line( "title", input_line, pl_title );
-    // check if title is empty, if not instantiate w/ pl_title 
-    // if ( !pl_title.compare_me("") ) {
     new_playlist = new Playlist( pl_title );
-    // }
   /*
    * Now read pairs of track titles and artists that are elements of
    * the playlist. Look them up in the tracks defined in the
@@ -418,7 +417,7 @@ Playlist *process_add_playlist(ifstream &in_port, Collection &collection)
         /*
         * Add the pointer to the track instance to the playlist
         */  
-        new_playlist->add_track(track_ptr); 
+        new_playlist->add_track( track_ptr ); 
     }
      /*
      * return the constructed playlist
@@ -537,7 +536,6 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
       parse_field_line( "artist", input_line, artist_value );
       
       track_p = in_collection.find_track( title_value, artist_value );
-        out_port << track_p << endl;
       if ( track_p == (Track *)0 ) {
 	    cout << "Error: failure finding a track" << endl;
 	    cout <<  "Title:  " << title_value  << endl;
@@ -567,8 +565,11 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
       
       in_port.getline( input_line, MAX_INPUT_LENGTH); 
       parse_field_line ( "pl_title", input_line, title_value );
+      /* find the playlist by title
+       * if it is found, return a pointer to playlist in playlist_p
+       * otherwise, return null pointer
+       */
       playlist_p = in_collection.find_playlist( title_value );
-
       if ( playlist_p == (Playlist *)0 ) {
 	    cout << "Error: failure finding a playlist" << endl;
     	cout <<  "Title:  " << title_value  << endl;
@@ -585,8 +586,7 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
       out_port << "*************************" << endl;
       out_port << "* List All Track Titles *" << endl;
       out_port << "**************************" << endl;
-      //out_port << in_collection.tracks << endl;
-        in_collection.print_track_titles( out_port );
+      in_collection.print_track_titles( out_port );
       out_port << endl;
       break;
 
@@ -594,7 +594,7 @@ void process_db_cmd_file(ifstream &in_port, Collection in_collection,
       out_port << "****************************" << endl;
       out_port << "* List All Playlist Titles *" << endl;
       out_port << "****************************" << endl;
-        in_collection.print_playlist_titles( out_port );
+      in_collection.print_playlist_titles( out_port );
       out_port << endl;
       break;
 
