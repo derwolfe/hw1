@@ -5,7 +5,7 @@
 # ADT String268, while the music_db module provides the ADTs for
 # organizing a music data base.
 #
-KUID = 2054583 
+KUID =  
 LAB_NAME = adt
 
 all: music_db
